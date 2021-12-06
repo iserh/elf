@@ -1,0 +1,4 @@
+**/*.DS_Store
+**/*.swp
+**/.texpadtmp
+**/_minted-main
