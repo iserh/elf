@@ -2,4 +2,6 @@
 **/*.swp
 **/.texpadtmp
 **/_minted-main
+**/.ipynb_checkpoints
+**/__pycache__
 data
