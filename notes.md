@@ -1,4 +1,4 @@
-# Steps
+# Roadmap
 ## 1. Augment Datasets
 * Download the individual datasets
 * Use Pre-Trained Sentence BERT to augment the dataset
@@ -35,3 +35,18 @@ https://github.com/gregversteeg/corex_topic
 ## Data Augmentation
 ### Sentence-bert
 https://github.com/UKPLab/sentence-transformers
+
+
+## --------------------------------------------------------------
+
+# Experiments
+## LDA
+### Embedding Model
+### Linear Model
+
+## CoreX
+- TF-IDF Vectorization
+### Embedding Model
+### Linear Model
+### Adjusting number of hidden topics
+~50 seems fine, more or less yields worse performance
