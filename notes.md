@@ -1,3 +1,37 @@
+## TODO
+- syntax dependencies? (different implementation with 0/1)
+- error analysis for better features
+- data augmentation
+- does topic model need more (outside) data?
+    - Hypothesis: Pre-Trained models can generalize, because they have seen the whole language. -> Topic modeling can, by definition, not yield good results, because it can only model the train topics (would require huge dataset).
+- Other dataset
+
+## DONE
+- Only use Nouns & Verbs
+- Lemmatization
+- ngrams
+
+
+
+## Summary
+
+- Lemmatization, preprocessing improvements
+- ngrams didn't work
+- data augmentation difficult, because no new data is seen
+    - data augmentation method needs additional unlabelled data which isn't there for the provided datasets
+- syntax does improve slightly
+- 
+
+- first experiments on QQP show no improvement on that dataset (67,8% accuracy on train)
+
+
+
+
+
+
+
+## --------------------------------------------------------------
+
 # Roadmap
 ## 1. Augment Datasets
 * Download the individual datasets
