@@ -25,7 +25,7 @@ def train_corex_model(output_dir: Path, config: PipelineConfig, benchmark: Bench
     s2_preprocessed = pipeline(benchmark.s2)
 
     # fit TF-IDF vectorizer
-    vectorizer = TfidfVectorizer(strip_accents="ascii", binary=True, ngram_range=(1,1))
+    vectorizer = TfidfVectorizer(strip_accents="ascii", binary=True)
     doc_word = vectorizer.fit_transform(pd.concat([s1_preprocessed, s2_preprocessed]))
     doc_word = ss.csr_matrix(doc_word)
 
@@ -37,7 +37,7 @@ def train_corex_model(output_dir: Path, config: PipelineConfig, benchmark: Bench
     words = list(np.asarray(vectorizer.get_feature_names_out()))
 
     # Train the CorEx topic model with 50 topics
-    topic_model = ct.Corex(n_hidden=300, words=words, max_iter=300, verbose=False, seed=1)
-    topic_model.fit(doc_word, words=words);
+    topic_model = ct.Corex(n_hidden=50, words=words, max_iter=300, verbose=False, seed=1)
+    topic_model.fit(doc_word, words=words)
 
     topic_model.save(output_dir / "corex_model.bin")
