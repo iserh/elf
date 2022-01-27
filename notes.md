@@ -1,4 +1,38 @@
-# Steps
+## TODO
+- syntax dependencies? (different implementation with 0/1)
+- error analysis for better features
+- data augmentation
+- does topic model need more (outside) data?
+    - Hypothesis: Pre-Trained models can generalize, because they have seen the whole language. -> Topic modeling can, by definition, not yield good results, because it can only model the train topics (would require huge dataset).
+- Other dataset
+
+## DONE
+- Only use Nouns & Verbs
+- Lemmatization
+- ngrams
+
+
+
+## Summary
+
+- Lemmatization, preprocessing improvements
+- ngrams didn't work
+- data augmentation difficult, because no new data is seen
+    - data augmentation method needs additional unlabelled data which isn't there for the provided datasets
+- syntax does improve slightly
+- 
+
+- first experiments on QQP show no improvement on that dataset (67,8% accuracy on train)
+
+
+
+
+
+
+
+## --------------------------------------------------------------
+
+# Roadmap
 ## 1. Augment Datasets
 * Download the individual datasets
 * Use Pre-Trained Sentence BERT to augment the dataset
@@ -35,3 +69,18 @@ https://github.com/gregversteeg/corex_topic
 ## Data Augmentation
 ### Sentence-bert
 https://github.com/UKPLab/sentence-transformers
+
+
+## --------------------------------------------------------------
+
+# Experiments
+## LDA
+### Embedding Model
+### Linear Model
+
+## CoreX
+- TF-IDF Vectorization
+### Embedding Model
+### Linear Model
+### Adjusting number of hidden topics
+~50 seems fine, more or less yields worse performance
