@@ -4,5 +4,7 @@
 **/_minted-main
 **/.ipynb_checkpoints
 **/__pycache__
+.vscode
 data
+models
 todo.md
