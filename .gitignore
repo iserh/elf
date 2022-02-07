@@ -5,6 +5,5 @@
 **/.ipynb_checkpoints
 **/__pycache__
 .vscode
-data
-models
-todo.md
+/data
+/models
