@@ -14,7 +14,7 @@ class CoreXFeatures:
         super().__init__()
         assert data_dir.exists()
         # initialize preprocessing pipeline
-        config = PipelineConfig.load(data_dir)
+        config = PipelineConfig.load(data_dir / "pipe_config.json")
         self.pipeline = Pipeline(config)
         # load vectorizer
         with open(data_dir / "vectorizer.bin", "rb") as f:

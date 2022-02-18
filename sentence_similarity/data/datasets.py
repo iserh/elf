@@ -1,14 +1,8 @@
 import csv
-import sys
 from pathlib import Path
 
 import pandas as pd
-import six
 from gensim.corpora import WikiCorpus
-
-from utils import get_logger
-
-logger = get_logger(__name__)
 
 
 def STSB(path: Path, partition: str) -> pd.DataFrame:
@@ -43,30 +37,34 @@ def Wikipedia(path: Path) -> pd.DataFrame:
     pass
 
 
-def _process_wiki():
-    logger.info("running %s" % ' '.join(sys.argv))
+def extract_wiki_corpus(path: Path):
+    wiki = WikiCorpus(
+        path / "enwiki-latest-pages-articles.xml.bz2",
+        dictionary={},
+        processes=20
+    )
 
-    # check and process input arguments
-    if len(sys.argv) != 3:
-        print("Using: python process_wiki.py enwiki.xxx.xml.bz2 wiki.en.text")
-        sys.exit(1)
-    inp, outp = sys.argv[1:3]
-    space = " "
-    i = 0
+    df = pd.DataFrame(columns=["article"], dtype=str)
 
-    output = open(outp, 'w')
-    wiki = WikiCorpus(inp, lemmatize=False, dictionary={})
-    for text in wiki.get_texts():
-        if six.PY3:
-            output.write(bytes(' '.join(text), 'utf-8').decode('utf-8') + '\n')
-        #   ###another method###
-        #    output.write(
-        #            space.join(map(lambda x:x.decode("utf-8"), text)) + '\n')
-        else:
-            output.write(space.join(text) + "\n")
-        i = i + 1
-        if (i % 10000 == 0):
-            logger.info("Saved " + str(i) + " articles")
+    output_dir = path / "processed"
+    output_dir.mkdir(exist_ok=True)
 
-    output.close()
-    logger.info("Finished Saved " + str(i) + " articles")
+    print("extracting wiki corpus.")
+
+    j = 1
+    for i, text in enumerate(wiki.get_texts(), start=1):
+        df = df.append({"article": " ".join(text)}, ignore_index=True)
+        if i % 10_000 == 0:
+            print(f"processed {i} articles.")
+        if i % 100_000 == 0:
+            # save batch
+            df.to_feather(output_dir / f"wiki_batch_{j:02d}.feather")
+            j += 1
+            # re init df
+            df = pd.DataFrame(columns=["article"], dtype=str)
+    
+    # save last batch
+    if len(df) > 0:
+        df.to_feather(output_dir / f"wiki_part_{j:02d}.feather")
+
+    print(f"finished: saved {i} articles.")
