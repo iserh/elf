@@ -23,24 +23,25 @@ wiki = WikiCorpus(
 docs = []
 
 # process wiki corpus
-with trange(SAVE_INTERVAL, leave=False, desc="preprocessing") as pbar:
-    for i, tokens in enumerate(wiki.get_texts(), start=1):
-        # append doc to list
-        docs.append(" ".join(tokens))
+pbar = trange(SAVE_INTERVAL, leave=False, desc="preprocessing")
+for i, tokens in enumerate(wiki.get_texts(), start=1):
+    # append doc to list
+    docs.append(" ".join(tokens))
 
-        if i % UPDATE_INTERVAL == 0:
-            # update pbar
-            pbar.update(n=UPDATE_INTERVAL)
+    if i % UPDATE_INTERVAL == 0:
+        # update pbar
+        pbar.update(n=UPDATE_INTERVAL)
 
-        if i % SAVE_INTERVAL == 0:
-            # save batch
-            df = pd.DataFrame({"doc": docs})
-            df.to_feather(output_dir / "wiki_preprocessed.feather")
-            # free memory
-            del df
-            # reset pbar
-            pbar.reset(total=i + SAVE_INTERVAL)
-            pbar.update(i)
+    if i % SAVE_INTERVAL == 0:
+        # close progress bar
+        pbar.close()
+        # save batch
+        df = pd.DataFrame({"doc": docs})
+        df.to_feather(output_dir / "wiki_preprocessed.feather")
+        # free memory
+        del df
+        # new progress bar
+        pbar = trange(initial=i, total=i+SAVE_INTERVAL, leave=False, desc="preprocessing")
 
 # final save
 df = pd.DataFrame({"doc": docs})
