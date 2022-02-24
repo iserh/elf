@@ -1,9 +1,10 @@
 from collections import deque
+from datetime import datetime
 from pathlib import Path
 from time import sleep
-import psutil
+
 import matplotlib.pyplot as plt
-from datetime import datetime
+import psutil
 
 output_dir = Path("data") / "performance"
 output_dir.mkdir(parents=True, exist_ok=True)

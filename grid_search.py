@@ -1,7 +1,8 @@
+import corextopic.corextopic as ct
+import scipy.sparse as ss
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.feature_extraction.text import TfidfVectorizer
-import scipy.sparse as ss
-import corextopic.corextopic as ct
+
 
 class CoreX(BaseEstimator, RegressorMixin):  
     """An example of classifier"""
@@ -46,9 +47,11 @@ class CoreX(BaseEstimator, RegressorMixin):
         return self.corex_.tc
 
 
-from sklearn.model_selection import GridSearchCV
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
+from sklearn.model_selection import GridSearchCV
+
 from utils import preprocess_factory
 
 data_dir = Path("/home/iailab36/iser/data/stsbenchmark")

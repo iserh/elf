@@ -5,8 +5,9 @@ from pathlib import Path
 import pandas as pd
 import scipy.sparse as ss
 from sklearn.feature_extraction.text import TfidfVectorizer
-from utils import preprocess_factory
 from tqdm import tqdm
+
+from utils import preprocess_factory
 
 MAX_FEATURES = 10_000
 
