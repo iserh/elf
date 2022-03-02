@@ -10,6 +10,7 @@ from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
+import pandas as pd
 
 stemmer = SnowballStemmer("english")
 stop_words = set(stopwords.words('english'))
@@ -38,10 +39,10 @@ def preprocess(doc):
 
 
 class CoreXProbsFactory:
-    def __init__(self, corex_path: Path, vectorizer_path: Path) -> None:
+    def __init__(self, vectorizer_path: Path, corex_name: str) -> None:
         with open(vectorizer_path / "vectorizer.bin", "rb") as f:
             self.vectorizer: TfidfVectorizer = pickle.load(f)
-        self.corex: ct.Corex = ct.load(corex_path / "corex_model.bin")
+        self.corex: ct.Corex = ct.load(vectorizer_path / corex_name / "corex_model.bin")
 
     def __call__(self, docs):
         processed = map(preprocess, docs)
@@ -68,3 +69,19 @@ class SyntaxFactory:
                     dobj = token.lemma_
             deps.append(np.stack([root, nsubj, dobj]))
         return np.stack(deps)
+
+
+def prepare_stsbenchmark(path: Path):
+    for partition in ["train", "dev", "test"]:
+        # if dataframe doesn't exist as feather, load the csv file
+        df: pd.DataFrame = pd.read_csv(path / "stsbenchmark" / f"sts-{partition}.csv", error_bad_lines=False, header = None, delimiter="\t", quoting=csv.QUOTE_NONE, encoding="utf-8")
+        # rename columns
+        df = df.rename(columns={0: "genre", 1: "filename", 2: "year", 3: "trash", 4: "score", 5: "s1", 6: "s2"})
+        # set datatypes
+        df.genre = df.genre.astype("category")
+        df.filename = df.filename.astype("category")
+        df.year = df.year.astype("category")
+        df.genre = df.genre.astype("category")
+        df.score = df.score / 5
+        # save feather
+        df.to_feather(path / "stsbenchmark" / f"sts-{partition}.feather")

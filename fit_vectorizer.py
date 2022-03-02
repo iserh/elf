@@ -7,29 +7,24 @@ import scipy.sparse as ss
 from sklearn.feature_extraction.text import TfidfVectorizer
 from tqdm import tqdm
 
-from utils import preprocess_factory
+from utils import preprocess
 
 MAX_FEATURES = 10_000
 
 src_dir = Path("/home/iailab36/iser/data/stsbenchmark")
 assert src_dir.exists()
-out_dir = Path("/home/iailab36/iser/models") / f"vectorizer-sts-{MAX_FEATURES}"
+out_dir = Path("/home/iailab36/iser/models") / f"sts_vec={MAX_FEATURES}"
 out_dir.mkdir(exist_ok=True, parents=True)
 
 df = pd.read_feather(src_dir / "sts-train.feather")
 docs = pd.concat([df.s1, df.s2])
+# docs = df.doc
 
 del df
 
-# preprocessing ------------
-preprocess = preprocess_factory()
+# preprocessing
 tqdm.pandas()
 docs = docs.progress_apply(preprocess)
-# from sentence_similarity.data.preprocess import PipelineConfig, Pipeline
-# config = PipelineConfig()
-# pipeline = Pipeline(config)
-# docs = pipeline(docs)
-# --------------------------
 
 print("creating vectorizer.")
 
