@@ -11,6 +11,7 @@ from nltk.stem import SnowballStemmer
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
+import gensim
 
 stemmer = SnowballStemmer("english")
 stop_words = set(stopwords.words('english'))
@@ -49,6 +50,23 @@ class CoreXProbsFactory:
         X = self.vectorizer.transform(processed)
         topic_probs = self.corex.transform(X, details=True)[0]
         return topic_probs
+
+
+class LDAProbs:
+    def __init__(self, path: Path) -> None:
+        super().__init__()
+        assert path.exists()
+        # load lda
+        self.lda = gensim.models.LdaMulticore.load(str(path / "lda"))
+
+    def __call__(self, docs):
+        docs = map(tokenize, docs)
+        # vectorize
+        bow = [self.lda.id2word.doc2bow(tokens) for tokens in docs]
+        # apply topic model
+        probs = [[topic[1] for topic in out] for out in self.lda[bow]]
+        # return as np array
+        return np.array(probs)
 
 
 class SyntaxFactory:
