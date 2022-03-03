@@ -16,7 +16,9 @@ assert src_dir.exists()
 out_dir = Path("/home/iailab36/iser/models") / f"sts_vec={MAX_FEATURES}"
 out_dir.mkdir(exist_ok=True, parents=True)
 
-df = pd.read_feather(src_dir / "sts-train.feather")
+df_train = pd.read_feather(src_dir / "sts-train.feather")
+df_val = pd.read_feather(src_dir / "sts-dev.feather")
+df = pd.concat([df_train, df_val])
 docs = pd.concat([df.s1, df.s2])
 # docs = df.doc
 
