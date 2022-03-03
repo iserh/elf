@@ -1,10 +1,10 @@
 """Training the topic model."""
+import json
 from pathlib import Path
 
 import numpy as np
 import scipy.sparse as ss
 from corextopic import corextopic as ct
-import json
 
 N_HIDDEN = 16
 MAX_ITER=7

@@ -3,15 +3,15 @@ import re
 from pathlib import Path
 
 import corextopic.corextopic as ct
+import gensim
 import numpy as np
+import pandas as pd
 import spacy
 from gensim.utils import deaccent, to_unicode
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
-import pandas as pd
-import gensim
 
 stemmer = SnowballStemmer("english")
 stop_words = set(stopwords.words('english'))

@@ -1,12 +1,11 @@
 """Training the topic model."""
 from pathlib import Path
 
-import numpy as np
+import gensim
 import numpy as np
 import pandas as pd
-import gensim
-
 from tqdm import tqdm
+
 from utils import tokenize
 
 N_HIDDEN = 300
