@@ -3,30 +3,30 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import spearmanr
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.neural_network import MLPRegressor
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.utils._testing import ignore_warnings
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.feature_extraction.text import TfidfVectorizer
 import torch
 import torch.nn.functional as F
-from sklearn.preprocessing import MinMaxScaler
+from scipy.stats import spearmanr
 from sentence_transformers import SentenceTransformer
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.neural_network import MLPRegressor
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.utils._testing import ignore_warnings
 from tqdm import tqdm
 
 from utils import (CoreXProbsFactory, LDAProbs, SyntaxFactory, preprocess,
                    tokenize)
 
 data_dir = Path("data")
-model_dir = Path("models")
+model_dir = Path("/home/iailab36/iser/models")
 
 SEEDS = [1337, 89, 56, 23, 54]
-COREX_HIDDEN_LIST = [300]
-VEC_FEAT = 100_000
+COREX_HIDDEN_LIST = [16, 32, 64, 128, 300]
+VEC_FEAT = 10_000
 DATA_AUGMENTATION = True
-SYNTAX = False
+SYNTAX = True
 
 
 random_forest = lambda SEED: RandomForestRegressor(criterion="squared_error", n_estimators=100, random_state=SEED)
@@ -56,7 +56,7 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
 
 
     get_topic_probs = CoreXProbsFactory(
-        vectorizer_path=model_dir / f"wiki_vec={VEC_FEAT}",
+        vectorizer_path=model_dir / f"sts_vec={VEC_FEAT}",
         corex_name=f"corex_n_hidden={COREX_HIDDEN}_iter=7",
     )
 
@@ -159,4 +159,4 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
         df_results,
         pd.DataFrame([results], columns=COLUMNS),
     ])
-    df_results.T.to_csv(f"./_df_results{'_aug' if DATA_AUGMENTATION else ''}{'_syn' if SYNTAX else ''}.csv")
+    df_results.T.to_csv(f"./df_results{'_aug' if DATA_AUGMENTATION else ''}{'_syn' if SYNTAX else ''}.csv")
