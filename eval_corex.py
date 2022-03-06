@@ -19,14 +19,14 @@ from tqdm import tqdm
 from utils import (CoreXProbsFactory, LDAProbs, SyntaxFactory, preprocess,
                    tokenize)
 
-data_dir = Path(".")
-model_dir = Path("/home/iailab36/iser/models")
+data_dir = Path("data")
+model_dir = Path("models")
 
 SEEDS = [1337, 89, 56, 23, 54]
-COREX_HIDDEN_LIST = [16, 32, 64, 128, 300]
-VEC_FEAT = 10_000
-DATA_AUGMENTATION = False
-SYNTAX = True
+COREX_HIDDEN_LIST = [300]
+VEC_FEAT = 100_000
+DATA_AUGMENTATION = True
+SYNTAX = False
 
 
 random_forest = lambda SEED: RandomForestRegressor(criterion="squared_error", n_estimators=100, random_state=SEED)
@@ -56,7 +56,7 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
 
 
     get_topic_probs = CoreXProbsFactory(
-        vectorizer_path=model_dir / f"sts_vec={VEC_FEAT}",
+        vectorizer_path=model_dir / f"wiki_vec={VEC_FEAT}",
         corex_name=f"corex_n_hidden={COREX_HIDDEN}_iter=7",
     )
 
@@ -159,4 +159,4 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
         df_results,
         pd.DataFrame([results], columns=COLUMNS),
     ])
-    df_results.T.to_csv(f"./df_results{'_aug' if DATA_AUGMENTATION else ''}{'_syn' if SYNTAX else ''}.csv")
+    df_results.T.to_csv(f"./_df_results{'_aug' if DATA_AUGMENTATION else ''}{'_syn' if SYNTAX else ''}.csv")
