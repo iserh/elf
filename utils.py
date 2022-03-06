@@ -16,7 +16,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 stemmer = SnowballStemmer("english")
 stop_words = set(stopwords.words('english'))
 
-filter_sym = re.compile(r'[^a-zA-Z\d\s\.,:]', re.UNICODE)
+filter_sym = re.compile(r'[^a-zA-Z\d\s:]', re.UNICODE)
 filter_num = re.compile(r"[0-9]+([,\.]?[0-9])*", re.UNICODE)
 
 
@@ -31,7 +31,7 @@ def tokenize(content, token_min_len=2, token_max_len=15, lower=True):
 
     return [
         stemmer.stem(token) for token in word_tokenize(content)
-        if not token in stop_words
+        # if not token in stop_words
     ]
 
 
