@@ -20,7 +20,7 @@ filter_sym = re.compile(r'[^a-zA-Z\d\s:]', re.UNICODE)
 filter_num = re.compile(r"[0-9]+([,\.]?[0-9])*", re.UNICODE)
 
 
-def tokenize(content, token_min_len=2, token_max_len=15, lower=True):
+def tokenize(content, token_min_len=2, token_max_len=15, lower=True, remove_stop_words=True):
     content = to_unicode(content)
 
     content = content.lower()
@@ -31,12 +31,12 @@ def tokenize(content, token_min_len=2, token_max_len=15, lower=True):
 
     return [
         stemmer.stem(token) for token in word_tokenize(content)
-        # if not token in stop_words
+        if not token in stop_words or not remove_stop_words
     ]
 
 
-def preprocess(doc):
-    return " ".join(tokenize(doc))
+def preprocess(doc, remove_stop_words=True):
+    return " ".join(tokenize(doc, remove_stop_words=remove_stop_words))
 
 
 class CoreXProbsFactory:
