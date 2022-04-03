@@ -11,6 +11,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neural_network import MLPRegressor
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.utils._testing import ignore_warnings
@@ -28,10 +29,14 @@ VEC_FEAT = 10_000
 DATA_AUGMENTATION = True
 SYNTAX = True
 
+output_dir = Path("outputs") / f"{DATA_AUGMENTATION=}_{SYNTAX=}"
+output_dir.mkdir(exist_ok=True, parents=True)
+
 
 random_forest = lambda SEED: RandomForestRegressor(criterion="squared_error", n_estimators=100, random_state=SEED)
 decision_tree = lambda SEED: DecisionTreeRegressor(random_state=SEED, max_depth=5)
 mlp = lambda SEED: MLPRegressor((512, 256), random_state=SEED)
+knn = lambda SEED: KNeighborsRegressor(n_neighbors=5, weights="distance", algorithm="auto", n_jobs=-1)
 
 
 # Load benchmark dataset
@@ -42,7 +47,7 @@ test_data = pd.read_feather(data_dir / "stsbenchmark" / "sts-test.feather")
 train_data = pd.concat([train_data, val_data]).reset_index(drop=True)
 
 
-COLUMNS = ["N_HIDDEN", "random_forest", "decision_tree", "mlp"]
+COLUMNS = ["N_HIDDEN", "knn"]
 df_results = pd.DataFrame(columns=COLUMNS, dtype=float)
 df_results_aug = pd.DataFrame(columns=COLUMNS, dtype=float)
 
@@ -132,7 +137,7 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
         y_train = y_train_w_aug
 
 
-    for model_cls in [random_forest, decision_tree, mlp]:
+    for model_cls in [knn]:
         metrics = np.empty((len(SEEDS),))
 
         for i, SEED in enumerate((pbar := tqdm(SEEDS, desc=model_cls(0).__class__.__name__, leave=False))):
@@ -159,4 +164,4 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
         df_results,
         pd.DataFrame([results], columns=COLUMNS),
     ])
-    df_results.T.to_csv(f"./df_results{'_aug' if DATA_AUGMENTATION else ''}{'_syn' if SYNTAX else ''}.csv")
+    df_results.T.to_csv(output_dir / "df.csv")
