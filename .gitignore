@@ -5,6 +5,7 @@
 **/.ipynb_checkpoints
 **/__pycache__
 .vscode
+*.code-workspace
 
 /data
 /models
