@@ -29,7 +29,7 @@ def plot(x, y, fpath: Path):
     plt.close()
 
 
-perc = deque([0] * (LOG_INTERVAL+1), maxlen=LOG_INTERVAL+1)
+perc = deque([0] * (LOG_INTERVAL + 1), maxlen=LOG_INTERVAL + 1)
 k = 0
 while True:
     k += 1

@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from utils import tokenize
+from elf.utils import tokenize
 
 N_HIDDEN = 300
 SEED = 1337
@@ -33,12 +33,12 @@ id2word = gensim.corpora.Dictionary(docs)
 
 # create lda model
 lda = gensim.models.LdaMulticore(
-   corpus=[id2word.doc2bow(doc) for doc in docs],
-   num_topics=N_HIDDEN,
-   id2word=id2word,
-   workers=10,
-   random_state=SEED,
-   minimum_probability=0,
+    corpus=[id2word.doc2bow(doc) for doc in docs],
+    num_topics=N_HIDDEN,
+    id2word=id2word,
+    workers=10,
+    random_state=SEED,
+    minimum_probability=0,
 )
 # save
 lda.save(str(out_dir / "lda"))

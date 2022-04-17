@@ -7,7 +7,7 @@ import scipy.sparse as ss
 from sklearn.feature_extraction.text import TfidfVectorizer
 from tqdm import tqdm
 
-from utils import preprocess
+from elf.utils import preprocess
 
 MAX_FEATURES = 10_000
 

@@ -10,7 +10,7 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.utils._testing import ignore_warnings
 from tqdm import tqdm
 
-from utils import CoreXProbsFactory, LDAProbs
+from elf.utils import CoreXProbsFactory, LDAProbs
 
 data_dir = Path(".")
 model_dir = Path("/home/iailab36/iser/models")
@@ -64,9 +64,20 @@ for N_HIDDEN in N_HIDDEN_LIST:
         y_val = test_data.score
         print("X_train:", X_train.shape)
 
-
-        spearman_train = np.empty((len(SEEDS,)))
-        spearman_test = np.empty((len(SEEDS,)))
+        spearman_train = np.empty(
+            (
+                len(
+                    SEEDS,
+                )
+            )
+        )
+        spearman_test = np.empty(
+            (
+                len(
+                    SEEDS,
+                )
+            )
+        )
 
         for i, SEED in enumerate((pbar := tqdm(SEEDS, desc=get_topic_probs.__class__.__name__, leave=False))):
             np.random.seed(SEED)
@@ -75,9 +86,7 @@ for N_HIDDEN in N_HIDDEN_LIST:
             y_train_ = y_train[perm]
 
             model = random_forest(SEED)
-            ignore_warnings(category=ConvergenceWarning)(
-                model.fit(X_train_, y_train_)
-            )
+            ignore_warnings(category=ConvergenceWarning)(model.fit(X_train_, y_train_))
 
             # evaluate model
             spearman_train[i] = spearmanr(model.predict(X_train), y_train)[0]
@@ -93,9 +102,10 @@ for N_HIDDEN in N_HIDDEN_LIST:
 
         results.append(spearman_test.mean())
 
-    df_results = pd.concat([
-        df_results,
-        pd.DataFrame([results], columns=COLUMNS),
-    ])
+    df_results = pd.concat(
+        [
+            df_results,
+            pd.DataFrame([results], columns=COLUMNS),
+        ]
+    )
     df_results.T.to_csv(f"./df_lda_corex.csv")
-

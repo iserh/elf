@@ -7,7 +7,7 @@ import scipy.sparse as ss
 from corextopic import corextopic as ct
 
 N_HIDDEN = 16
-MAX_ITER=7
+MAX_ITER = 7
 SEED = 1337
 VECTORIZER_FEAT = 10_000
 
@@ -15,7 +15,9 @@ np.random.seed(SEED)
 
 src_dir = Path("/home/iailab36/iser/models") / f"sts_vec={VECTORIZER_FEAT}"
 assert src_dir.exists(), f"{src_dir} doesn't exist"
-out_dir = Path("/home/iailab36/iser/models") / f"sts_vec={VECTORIZER_FEAT}" / f"corex_n_hidden={N_HIDDEN}_iter={MAX_ITER}"
+out_dir = (
+    Path("/home/iailab36/iser/models") / f"sts_vec={VECTORIZER_FEAT}" / f"corex_n_hidden={N_HIDDEN}_iter={MAX_ITER}"
+)
 out_dir.mkdir(exist_ok=True, parents=True)
 
 

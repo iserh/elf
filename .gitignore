@@ -1,11 +1,16 @@
-**/*.DS_Store
-**/*.swp
-**/.texpadtmp
-**/_minted-main
-**/.ipynb_checkpoints
+# folders
+**/.DS_Store
 **/__pycache__
+.nox
+.pytest_cache
 .vscode
-*.code-workspace
+htmlcov
+data
 
-/data
-/models
+# files
+.coverage
+poetry.lock
+
+# extensions
+**/*.code-workspace
+**/*.tif

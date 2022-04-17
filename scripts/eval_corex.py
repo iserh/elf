@@ -10,15 +10,14 @@ from sentence_transformers import SentenceTransformer
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.neural_network import MLPRegressor
 from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.utils._testing import ignore_warnings
 from tqdm import tqdm
 
-from utils import (CoreXProbsFactory, LDAProbs, SyntaxFactory, preprocess,
-                   tokenize)
+from elf.utils import CoreXProbsFactory, LDAProbs, SyntaxFactory, preprocess, tokenize
 
 data_dir = Path("data")
 model_dir = Path("/home/iailab36/iser/models")
@@ -59,12 +58,10 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
     features_train = []
     features_val = []
 
-
     get_topic_probs = CoreXProbsFactory(
         vectorizer_path=model_dir / f"sts_vec={VEC_FEAT}",
         corex_name=f"corex_n_hidden={COREX_HIDDEN}_iter=7",
     )
-
 
     # compute topic probabilities
     topic_probs_train_1 = get_topic_probs(train_data.s1)
@@ -77,7 +74,6 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
     # add to features list
     features_train.append(topic_probs_train)
     features_val.append(topic_probs_test)
-
 
     if SYNTAX:
         get_syntax_deps = SyntaxFactory()
@@ -93,7 +89,6 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
         features_train.append(syntax_train)
         features_val.append(syntax_test)
 
-
     # create input vectors
     X_train = np.concatenate(features_train, axis=1)
     X_test = np.concatenate(features_val, axis=1)
@@ -102,27 +97,22 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
     y_test = test_data.score
     print("X_train:", X_train.shape)
 
-
     if DATA_AUGMENTATION:
         # load augmentation dataset
         aug_data = pd.read_feather(data_dir / "stsbenchmark" / "df_augment.feather")
 
         features_aug = []
 
-
         # get topics of the augmented sentences
-        topic_probs_augmented = np.concatenate([
-            topic_probs_train_1[aug_data.idx1],
-            topic_probs_train_2[aug_data.idx2]
-        ], axis=1)
+        topic_probs_augmented = np.concatenate(
+            [topic_probs_train_1[aug_data.idx1], topic_probs_train_2[aug_data.idx2]], axis=1
+        )
         features_aug.append(topic_probs_augmented)
-
 
         if SYNTAX:
             # syntax features
             syntax_aug = (syntax_train_1[aug_data.idx1] == syntax_train_2[aug_data.idx2]).astype(int)
             features_aug.append(syntax_aug)
-
 
         # create inputs / targets of augmented dataset
         X_aug = np.concatenate(features_aug, axis=1)
@@ -136,7 +126,6 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
         X_train = X_train_w_aug
         y_train = y_train_w_aug
 
-
     for model_cls in [knn]:
         metrics = np.empty((len(SEEDS),))
 
@@ -147,9 +136,7 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
             y_train_ = y_train[perm]
 
             model = model_cls(SEED)
-            ignore_warnings(category=ConvergenceWarning)(
-                model.fit(X_train_, y_train_)
-            )
+            ignore_warnings(category=ConvergenceWarning)(model.fit(X_train_, y_train_))
 
             # evaluate model
             spearman_train = spearmanr(model.predict(X_train), y_train)[0]
@@ -160,8 +147,10 @@ for COREX_HIDDEN in COREX_HIDDEN_LIST:
         results.append(metrics.mean())
         print(f"SpearmanRank: {results[-1]:.4f}")
 
-    df_results = pd.concat([
-        df_results,
-        pd.DataFrame([results], columns=COLUMNS),
-    ])
+    df_results = pd.concat(
+        [
+            df_results,
+            pd.DataFrame([results], columns=COLUMNS),
+        ]
+    )
     df_results.T.to_csv(output_dir / "df.csv")

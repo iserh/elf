@@ -14,9 +14,9 @@ from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 stemmer = SnowballStemmer("english")
-stop_words = set(stopwords.words('english'))
+stop_words = set(stopwords.words("english"))
 
-filter_sym = re.compile(r'[^a-zA-Z\d\s:]', re.UNICODE)
+filter_sym = re.compile(r"[^a-zA-Z\d\s:]", re.UNICODE)
 filter_num = re.compile(r"[0-9]+([,\.]?[0-9])*", re.UNICODE)
 
 
@@ -29,10 +29,7 @@ def tokenize(content, token_min_len=2, token_max_len=15, lower=True, remove_stop
     content = filter_sym.sub("", content)
     content = filter_num.sub(" num ", content)
 
-    return [
-        stemmer.stem(token) for token in word_tokenize(content)
-        if not token in stop_words or not remove_stop_words
-    ]
+    return [stemmer.stem(token) for token in word_tokenize(content) if not token in stop_words or not remove_stop_words]
 
 
 def preprocess(doc, remove_stop_words=True):
@@ -92,7 +89,14 @@ class SyntaxFactory:
 def prepare_stsbenchmark(path: Path):
     for partition in ["train", "dev", "test"]:
         # if dataframe doesn't exist as feather, load the csv file
-        df: pd.DataFrame = pd.read_csv(path / "stsbenchmark" / f"sts-{partition}.csv", error_bad_lines=False, header = None, delimiter="\t", quoting=csv.QUOTE_NONE, encoding="utf-8")
+        df: pd.DataFrame = pd.read_csv(
+            path / "stsbenchmark" / f"sts-{partition}.csv",
+            error_bad_lines=False,
+            header=None,
+            delimiter="\t",
+            quoting=csv.QUOTE_NONE,
+            encoding="utf-8",
+        )
         # rename columns
         df = df.rename(columns={0: "genre", 1: "filename", 2: "year", 3: "trash", 4: "score", 5: "s1", 6: "s2"})
         # set datatypes

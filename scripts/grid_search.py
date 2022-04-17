@@ -4,8 +4,8 @@ from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-class CoreX(BaseEstimator, RegressorMixin):  
-    """An example of classifier"""
+class CoreX(BaseEstimator, RegressorMixin):
+    """An example of classifier."""
 
     def __init__(
         self,
@@ -15,20 +15,16 @@ class CoreX(BaseEstimator, RegressorMixin):
     ):
         self.vectorizer_max_feat = vectorizer_max_feat
         self.n_hidden = n_hidden
-        self.corex_max_iter = corex_max_iter 
-
+        self.corex_max_iter = corex_max_iter
 
     def fit(self, X, y=None):
-        assert (type(self.vectorizer_max_feat) == int), "vectorizer_max_feat parameter must be integer"
-        assert (type(self.n_hidden) == int), "n_topics parameter must be integer"
-        assert (type(self.corex_max_iter) == int), "topic_model_max_iter parameter must be integer"
+        assert type(self.vectorizer_max_feat) == int, "vectorizer_max_feat parameter must be integer"
+        assert type(self.n_hidden) == int, "n_topics parameter must be integer"
+        assert type(self.corex_max_iter) == int, "topic_model_max_iter parameter must be integer"
 
         print("vectorizer fit")
         self.vectorizer_ = TfidfVectorizer(
-            max_features=self.vectorizer_max_feat,
-            strip_accents="ascii",
-            lowercase=True,
-            binary=True
+            max_features=self.vectorizer_max_feat, strip_accents="ascii", lowercase=True, binary=True
         )
         X = self.vectorizer_.fit_transform(X)
         X = ss.csr_matrix(X)
@@ -52,7 +48,7 @@ from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
 
-from utils import preprocess_factory
+from elf.utils import preprocess_factory
 
 data_dir = Path("/home/iailab36/iser/data/stsbenchmark")
 

@@ -4,7 +4,7 @@ import pandas as pd
 from gensim.corpora import WikiCorpus
 from tqdm import trange
 
-from utils import tokenize
+from elf.utils import tokenize
 
 data_dir = Path("/home/iailab36/iser/data/wiki")
 output_dir = Path("/home/iailab36/iser/data/wiki")
@@ -41,7 +41,7 @@ for i, tokens in enumerate(wiki.get_texts(), start=1):
         # free memory
         del df
         # new progress bar
-        pbar = trange(initial=i, total=i+SAVE_INTERVAL, leave=False, desc="preprocessing")
+        pbar = trange(initial=i, total=i + SAVE_INTERVAL, leave=False, desc="preprocessing")
 
 # final save
 df = pd.DataFrame({"doc": docs})
